@@ -1,6 +1,7 @@
 package com.example.chaeyk.googleplaytest;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,7 +15,6 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.AgeAuthResponse;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
-import com.kakao.util.helper.log.Logger;
 
 /**
  * Created by chaeyk on 2016-01-07.
@@ -26,7 +26,7 @@ public class KakaoActivity extends BaseActivity {
         UserManagement.requestMe(new MeResponseCallback() {
             @Override
             public void onSuccess(UserProfile result) {
-                Logger.i("success");
+                Log.i("TEST", "success");
                 setContentView(R.layout.kakao_layout);
 
                 TextView tvID = (TextView) findViewById(R.id.tvID);
@@ -47,13 +47,13 @@ public class KakaoActivity extends BaseActivity {
 
             @Override
             public void onSessionClosed(ErrorResult errorResult) {
-                Logger.e(errorResult.getErrorMessage());
+                Log.e("TEST", errorResult.getErrorMessage());
                 redirectMainActivity();
             }
 
             @Override
             public void onNotSignedUp() {
-                Logger.e("not signed up");
+                Log.e("TEST", "not signed up");
                 redirectMainActivity();
             }
         });

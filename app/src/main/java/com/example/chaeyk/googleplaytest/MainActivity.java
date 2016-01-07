@@ -25,7 +25,7 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onSessionOpened() {
             //redirectSignupActivity();
-            Log.i("mylog", "----------------------------------------------------------------------------     session opened: " + Session.getCurrentSession().getAccessToken());
+            Log.i("TEST", "session opened: " + Session.getCurrentSession().getAccessToken());
             redirectActivity(KakaoActivity.class);
         }
 
