@@ -1,8 +1,7 @@
-package com.example.chaeyk.googleplaytest;
+package com.example.chaeyk.snsaccounttest;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Handler;
 
 //import com.kakao.sdk.sample.common.widget.WaitingDialog;
 

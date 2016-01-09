@@ -1,4 +1,4 @@
-package com.example.chaeyk.googleplaytest;
+package com.example.chaeyk.snsaccounttest;
 
 import org.junit.Test;
 
