@@ -11,9 +11,6 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 
-/**
- * Created by chaeyk on 2016-01-07.
- */
 public class KakaoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
