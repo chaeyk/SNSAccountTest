@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.AccessToken;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.kakao.auth.IApplicationConfig;
@@ -58,7 +60,7 @@ public class GlobalApplication extends Application {
         KakaoSDK.init(new KakaoSDKAdapter());
 
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.google_server_client_id))
+                .requestIdToken(getString(R.string.google_client_id))
                 .requestEmail()
                 .build();
     }
@@ -81,5 +83,15 @@ public class GlobalApplication extends Application {
 
     public static void setGoogleSignInResult(GoogleSignInResult result) {
         googleSignInResult = result;
+    }
+
+    private static AccessToken facebookAccessToken;
+
+    public static AccessToken getFacebookAccessToken() {
+        return facebookAccessToken;
+    }
+
+    public static void setFacebookAccessToken(AccessToken facebookAccessToken) {
+        GlobalApplication.facebookAccessToken = facebookAccessToken;
     }
 }

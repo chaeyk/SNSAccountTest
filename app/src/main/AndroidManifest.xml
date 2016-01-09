@@ -19,8 +19,15 @@
 
         <activity android:name="com.example.chaeyk.snsaccounttest.KakaoActivity" />
         <activity android:name="com.example.chaeyk.snsaccounttest.GoogleActivity" />
+        <activity android:name="com.example.chaeyk.snsaccounttest.FacebookActivity" />
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
 
         <meta-data android:name="com.kakao.sdk.AppKey" android:value="@string/kakao_app_key" />
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

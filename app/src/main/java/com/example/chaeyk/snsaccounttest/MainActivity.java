@@ -2,13 +2,21 @@ package com.example.chaeyk.snsaccounttest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
@@ -27,7 +35,7 @@ public class MainActivity extends BaseActivity {
     //////////////////////////////////////////////////////////////
     // For kakao authentication
 
-    private class SessionCallback implements ISessionCallback {
+    private class KakaoSessionCallback implements ISessionCallback {
 
         @Override
         public void onSessionOpened() {
@@ -47,45 +55,76 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private SessionCallback callback;
+    private KakaoSessionCallback kakaoSessionCallback;
 
     /////////////////////////////////////////////////////////////////
     // For Google+ SignIn
-    GoogleApiClient mGoogleApiClient;
+    GoogleApiClient googleApiClient;
+
+    /////////////////////////////////////////////////////////////////
+    // For Facebook
+    CallbackManager facebookCallbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        callback = new SessionCallback();
-        Session.getCurrentSession().addCallback(callback);
+        kakaoSessionCallback = new KakaoSessionCallback();
+        Session.getCurrentSession().addCallback(kakaoSessionCallback);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(ConnectionResult connectionResult) {
                         Log.e("TEST", "google connection failed: " + connectionResult.getErrorMessage());
-                        setMainLayout();
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, GlobalApplication.getGoogleSignInOptions())
                 .build();
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        facebookCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(facebookCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                AccessToken accessToken = loginResult.getAccessToken();
+                GlobalApplication.setFacebookAccessToken(accessToken);
+                Log.i("TEST", "Facebook login: " + accessToken.getToken());
+                redirectActivity(FacebookActivity.class);
+            }
+
+            @Override
+            public void onCancel() {
+                Log.w("TEST", "Facebook canceled");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.e("TEST", "Facebook failed: " + error.toString());
+            }
+        });
 
         tryKakao();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // kakao
         if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
             return;
         }
 
+        // google
         if (requestCode == REQCODE_GOOGLE) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             processGoogleResult(result);
+            return;
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+
+        // facebook
+        facebookCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void tryKakao() {
@@ -98,13 +137,13 @@ public class MainActivity extends BaseActivity {
     private void tryGoogle() {
         Log.i("TEST", "tryGoogle()");
         OptionalPendingResult<GoogleSignInResult> pendingResult =
-                Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+                Auth.GoogleSignInApi.silentSignIn(googleApiClient);
         if (pendingResult.isDone()) {
             // There's immediate result available.
             processGoogleResult(pendingResult.get());
         } else {
             // There's no immediate result ready, displays some progress indicator and waits for the
-            // async callback.
+            // async kakaoSessionCallback.
             pendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
                 public void onResult(@NonNull GoogleSignInResult result) {
@@ -123,6 +162,18 @@ public class MainActivity extends BaseActivity {
             redirectActivity(GoogleActivity.class);
         } else {
             Log.e("TEST", "Google SignIn failed: " + result.getStatus());
+            tryFacebook();
+        }
+    }
+
+    private void tryFacebook() {
+        Log.i("TEST", "tryFacebook()");
+        if (AccessToken.getCurrentAccessToken() != null) {
+            AccessToken accessToken = AccessToken.getCurrentAccessToken();
+            GlobalApplication.setFacebookAccessToken(accessToken);
+            Log.i("TEST", "Facebook token: " + accessToken.getToken());
+            redirectActivity(FacebookActivity.class);
+        } else {
             setMainLayout();
         }
     }
@@ -134,7 +185,7 @@ public class MainActivity extends BaseActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
                 startActivityForResult(signInIntent, REQCODE_GOOGLE);
             }
         });
@@ -143,6 +194,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Session.getCurrentSession().removeCallback(callback);
+        Session.getCurrentSession().removeCallback(kakaoSessionCallback);
     }
 }
