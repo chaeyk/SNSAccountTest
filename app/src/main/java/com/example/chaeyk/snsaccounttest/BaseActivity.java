@@ -2,13 +2,14 @@ package com.example.chaeyk.snsaccounttest;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 
 //import com.kakao.sdk.sample.common.widget.WaitingDialog;
 
 /**
  * @author leoshin, created at 15. 7. 20..
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends FragmentActivity {
     protected static Activity self;
 
     @Override

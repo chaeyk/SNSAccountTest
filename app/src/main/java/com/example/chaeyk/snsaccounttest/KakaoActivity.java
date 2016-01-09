@@ -15,6 +15,7 @@ public class KakaoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         UserManagement.requestMe(new MeResponseCallback() {
             @Override
             public void onSuccess(UserProfile result) {
