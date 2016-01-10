@@ -39,8 +39,8 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onSessionOpened() {
-            //redirectSignupActivity();
-            Log.i("TEST", "Kakao session opened: " + Session.getCurrentSession().getAccessToken());
+            // id는 requestMe() 해야 나온다.
+            Log.i("TEST", "Kakao token: " + Session.getCurrentSession().getAccessToken());
             redirectActivity(KakaoActivity.class);
         }
 
@@ -157,8 +157,8 @@ public class MainActivity extends BaseActivity {
         if (result.isSuccess()) {
             GlobalApplication.setGoogleSignInResult(result);
             GoogleSignInAccount acct = result.getSignInAccount();
-            String idToken = acct.getIdToken();
-            Log.i("TEST", "google token: " + idToken);
+            Log.i("TEST", "Google id: " + acct.getId());
+            Log.i("TEST", "Google token: " + acct.getIdToken());
             redirectActivity(GoogleActivity.class);
         } else {
             Log.e("TEST", "Google SignIn failed: " + result.getStatus());
@@ -171,6 +171,7 @@ public class MainActivity extends BaseActivity {
         if (AccessToken.getCurrentAccessToken() != null) {
             AccessToken accessToken = AccessToken.getCurrentAccessToken();
             GlobalApplication.setFacebookAccessToken(accessToken);
+            Log.i("TEST", "Facebook id: " + accessToken.getUserId());
             Log.i("TEST", "Facebook token: " + accessToken.getToken());
             redirectActivity(FacebookActivity.class);
         } else {
