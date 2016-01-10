@@ -84,14 +84,4 @@ public class GlobalApplication extends Application {
     public static void setGoogleSignInResult(GoogleSignInResult result) {
         googleSignInResult = result;
     }
-
-    private static AccessToken facebookAccessToken;
-
-    public static AccessToken getFacebookAccessToken() {
-        return facebookAccessToken;
-    }
-
-    public static void setFacebookAccessToken(AccessToken facebookAccessToken) {
-        GlobalApplication.facebookAccessToken = facebookAccessToken;
-    }
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
@@ -18,14 +19,18 @@ public class FacebookActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.facebook_layout);
 
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        Log.i("TEST", "Facebook id: " + accessToken.getUserId());
+        Log.i("TEST", "Facebook token: " + accessToken.getToken());
+        new HttpClient().report("http://dev1.idolchamp.com:3009/facebook", accessToken.getUserId(), accessToken.getToken());
+
         TextView tvID = (TextView) findViewById(R.id.tvID);
-        tvID.setText(GlobalApplication.getFacebookAccessToken().getUserId());
+        tvID.setText(accessToken.getUserId());
 
         findViewById(R.id.btnLogout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LoginManager.getInstance().logOut();
-                GlobalApplication.setFacebookAccessToken(null);
                 redirectMainActivity();
             }
         });

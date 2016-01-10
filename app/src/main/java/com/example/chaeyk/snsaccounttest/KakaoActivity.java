@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
@@ -24,6 +25,9 @@ public class KakaoActivity extends BaseActivity {
 
                 TextView tvID = (TextView) findViewById(R.id.tvID);
                 tvID.setText(Long.toString(result.getId()));
+
+                new HttpClient().report("http://dev1.idolchamp.com:3009/kakao",
+                        Long.toString(result.getId()), Session.getCurrentSession().getAccessToken());
 
                 findViewById(R.id.btnLogout).setOnClickListener(new View.OnClickListener() {
                     @Override

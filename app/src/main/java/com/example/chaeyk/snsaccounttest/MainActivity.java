@@ -87,9 +87,6 @@ public class MainActivity extends BaseActivity {
         LoginManager.getInstance().registerCallback(facebookCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                AccessToken accessToken = loginResult.getAccessToken();
-                GlobalApplication.setFacebookAccessToken(accessToken);
-                Log.i("TEST", "Facebook login: " + accessToken.getToken());
                 redirectActivity(FacebookActivity.class);
             }
 
@@ -159,6 +156,7 @@ public class MainActivity extends BaseActivity {
             GoogleSignInAccount acct = result.getSignInAccount();
             Log.i("TEST", "Google id: " + acct.getId());
             Log.i("TEST", "Google token: " + acct.getIdToken());
+            new HttpClient().report("http://dev1.idolchamp.com:3009/google", acct.getId(), acct.getIdToken());
             redirectActivity(GoogleActivity.class);
         } else {
             Log.e("TEST", "Google SignIn failed: " + result.getStatus());
@@ -169,10 +167,6 @@ public class MainActivity extends BaseActivity {
     private void tryFacebook() {
         Log.i("TEST", "tryFacebook()");
         if (AccessToken.getCurrentAccessToken() != null) {
-            AccessToken accessToken = AccessToken.getCurrentAccessToken();
-            GlobalApplication.setFacebookAccessToken(accessToken);
-            Log.i("TEST", "Facebook id: " + accessToken.getUserId());
-            Log.i("TEST", "Facebook token: " + accessToken.getToken());
             redirectActivity(FacebookActivity.class);
         } else {
             setMainLayout();
