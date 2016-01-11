@@ -40,7 +40,6 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onSessionOpened() {
             // id는 requestMe() 해야 나온다.
-            Log.i("TEST", "Kakao token: " + Session.getCurrentSession().getAccessToken());
             redirectActivity(KakaoActivity.class);
         }
 

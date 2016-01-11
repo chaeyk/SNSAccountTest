@@ -20,8 +20,10 @@ public class KakaoActivity extends BaseActivity {
         UserManagement.requestMe(new MeResponseCallback() {
             @Override
             public void onSuccess(UserProfile result) {
-                Log.i("TEST", "success");
                 setContentView(R.layout.kakao_layout);
+
+                Log.i("TEST", "Kakao id: " + Long.toString(result.getId()));
+                Log.i("TEST", "Kakao token: " + Session.getCurrentSession().getAccessToken());
 
                 TextView tvID = (TextView) findViewById(R.id.tvID);
                 tvID.setText(Long.toString(result.getId()));
