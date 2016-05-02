@@ -28,8 +28,40 @@
 
         <meta-data android:name="com.kakao.sdk.AppKey" android:value="@string/kakao_app_key" />
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.chaeyk.snsaccounttest" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name="com.example.chaeyk.snsaccounttest.MyGcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.example.chaeyk.snsaccounttest.MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.example.chaeyk.snsaccounttest.RegistrationIntentService"
+            android:exported="false">
+        </service>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <permission android:name="com.example.chaeyk.snsaccounttest.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.example.chaeyk.snsaccounttest.permission.C2D_MESSAGE" />
 
 </manifest>

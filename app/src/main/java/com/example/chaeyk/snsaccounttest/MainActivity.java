@@ -19,6 +19,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
@@ -100,7 +101,18 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        if (checkPlayServices()) {
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+
         tryKakao();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Session.getCurrentSession().removeCallback(kakaoSessionCallback);
     }
 
     @Override
@@ -155,7 +167,7 @@ public class MainActivity extends BaseActivity {
             GoogleSignInAccount acct = result.getSignInAccount();
             Log.i("TEST", "Google id: " + acct.getId());
             Log.i("TEST", "Google token: " + acct.getIdToken());
-            new HttpClient().report("http://dev1.idolchamp.com:3009/google", acct.getId(), acct.getIdToken());
+            new HttpClient().report("google", acct.getId(), acct.getIdToken());
             redirectActivity(GoogleActivity.class);
         } else {
             Log.e("TEST", "Google SignIn failed: " + result.getStatus());
@@ -185,9 +197,24 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Session.getCurrentSession().removeCallback(kakaoSessionCallback);
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, -1)
+                        .show();
+            } else {
+                Log.i("TEST", "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 }

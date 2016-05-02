@@ -28,8 +28,7 @@ public class KakaoActivity extends BaseActivity {
                 TextView tvID = (TextView) findViewById(R.id.tvID);
                 tvID.setText(Long.toString(result.getId()));
 
-                new HttpClient().report("http://dev1.idolchamp.com:3009/kakao",
-                        Long.toString(result.getId()), Session.getCurrentSession().getAccessToken());
+                new HttpClient().report("kakao", Long.toString(result.getId()), Session.getCurrentSession().getAccessToken());
 
                 findViewById(R.id.btnLogout).setOnClickListener(new View.OnClickListener() {
                     @Override

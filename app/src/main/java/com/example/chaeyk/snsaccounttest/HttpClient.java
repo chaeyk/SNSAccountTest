@@ -6,13 +6,17 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * Created by chaeyk on 2016-01-10.
  */
 public class HttpClient {
+
+    public static final String URL = "http://dev1.idolchamp.com:3009/";
 
     AsyncTask<String, Void, String> task;
 
@@ -49,7 +53,15 @@ public class HttpClient {
         task.execute(url);
     }
 
-    public void report(String url, String id, String token) {
-        call(url + "?id=" + id + "&token=" + token);
+    public void report(String service, String id, String token) {
+        call(URL + service + "?id=" + id + "&token=" + token);
+    }
+
+    public void push(String token) {
+        call(URL + "push?token=" + token);
+    }
+
+    public void noti(String from, String message) throws UnsupportedEncodingException {
+        call(URL + "noti?from=" + from + "&message=" + URLEncoder.encode(message, "utf8"));
     }
 }

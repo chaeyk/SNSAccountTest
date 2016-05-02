@@ -22,7 +22,7 @@ public class FacebookActivity extends BaseActivity {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         Log.i("TEST", "Facebook id: " + accessToken.getUserId());
         Log.i("TEST", "Facebook token: " + accessToken.getToken());
-        new HttpClient().report("http://dev1.idolchamp.com:3009/facebook", accessToken.getUserId(), accessToken.getToken());
+        new HttpClient().report("facebook", accessToken.getUserId(), accessToken.getToken());
 
         TextView tvID = (TextView) findViewById(R.id.tvID);
         tvID.setText(accessToken.getUserId());
